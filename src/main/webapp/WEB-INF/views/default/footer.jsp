@@ -15,11 +15,11 @@
 <div  style="left: 0%; bottom: 0%; width: 50%; height: 100%; margin-left: 10px; margin-bottom: 30px;">
 <figure class="text-center">
   <blockquote class="blockquote">
-    <p class="mb-0">본 사이트는 덕환이의 개인정보를 가지고 있으며 덕환이의 개인정보는 키 170cm 미만, 발 size 245mm, 옷 s~m size, 마른 체형, 남자 좋아함 등등 덕환이의 사생활이 담겨 있습니다.</p>
+    <p class="mb-0">본 사이트는 팀 프로젝트 기반 개인 프로젝트입니다.</p>
   
   </blockquote>
   <figcaption class="blockquote-footer">
-    	<cite title="Source Title">고(자)덕환</cite>
+    	<cite title="Source Title">오지희</cite>
   </figcaption>
 </figure>
 
