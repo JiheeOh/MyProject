@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.care.root.mybatis.board.BoardMapper">
+
+	<resultMap type="com.care.root.board.dto.BoardDTO" id="board">
+		<!-- primary key를 등록해줄떄 사용 -->
+		<id property="board_seq" column="board_seq" />
+
+		<!-- 일반적인 데이터를 등록할때 사용 -->
+		<result property="board_category" column="board_category" />
+		<result property="board_writer" column="board_writer" />
+		<result property="board_title" column="board_title" />
+		<result property="board_write_time" column="board_write_time" />
+		<result property="board_view_count" column="board_view_count" />
+		<result property="board_file_url" column="board_file_url" />
+		<result property="board_content" column="board_content" />
+		<result property="board_like_count" column="board_like_count" />
+		<result property="board_secret" column="board_secret" />
+		<result property="board_secret_pwd" column="board_secret_pwd" />
+		
+	</resultMap>
+	
+	<resultMap type="com.care.root.board.dto.BoardCommentDTO" id="comment">
+		<!-- primary key를 등록해줄떄 사용 -->
+		<id property="comment_seq" column="comment_seq" />
+
+		<!-- 일반적인 데이터를 등록할때 사용 -->
+		<result property="comment_board_seq" column="comment_board_seq" />
+		<result property="comment_writer" column="comment_writer" />
+		<result property="comment_write_time" column="comment_write_time" />
+		<result property="comment_content" column="comment_content" />
+		<result property="comment_like_count" column="comment_like_count" />
+		<result property="comment_secret" column="comment_secret" />
+		<result property="comment_secret_pwd" column="comment_secret_pwd" />
+		
+	</resultMap>
+	
+
+	<select id="selectBoardCount" resultType="Integer">
+		select count(*) from board_table
+	</select>
+	
+	<select id="selectAllBoardList" resultMap="board">
+		select B.* from(select rownum rn, A.* from (select * from board_table order by board_seq desc)A)B where rn 
+		between #{page_start_number} and #{page_end_number}
+	</select>
+	
+	<insert id="boardWriteSave">
+		insert into board_table(board_seq, board_writer, board_title, board_category, board_content, board_secret, board_secret_pwd, board_file_url) values
+		(board_seq.nextval, #{board_writer}, #{board_title}, #{board_category}, #{board_content}, #{board_secret}, #{board_secret_pwd}, #{board_file_url})
+	</insert>
+	
+	<select id="boardDetailView" resultMap="board">
+		
+		select * from board_table where board_seq = #{board_seq}
+	
+	</select>
+	
+	<update id="boardViewCount">
+		update board_table set board_view_count=board_view_count+1 where board_seq = #{board_seq}
+	</update>
+	
+	<update id="boardModify">
+		update board_table set board_title=#{board_title}, board_write_time=#{board_write_time}, board_category=#{board_category}, board_content=#{board_content}, board_secret=#{board_secret}, 
+		board_secret_pwd=#{board_secret_pwd}, board_file_url=#{board_file_url} where board_seq =#{board_seq}
+	</update>
+	
+	<delete id="boardDelete">
+		delete from board_table where board_seq=#{board_seq}
+	</delete>
+	
+	<!-- 총 게시글 갯수 출력 -->
+	<select id="boardCount" resultType="int">
+		SELECT COUNT(*) FROM board_table
+	</select>
+	
+	<!-- 페이징 처리 후 게시글 조회 -->
+	<select id="boardSelect" resultMap="board">
+		SELECT * 
+			FROM (
+				SELECT ROWNUM RN, A.* 
+					FROM (
+							SELECT * 
+							FROM board_table  
+							order by board_seq desc
+							) A
+					)
+		WHERE RN BETWEEN #{start} AND #{end}
+	</select>
+	
+	<insert id="commentWrite">	
+		insert into comment_table(comment_seq, comment_board_seq, comment_writer, comment_content, comment_secret, comment_secret_pwd) values
+		(comment_seq.nextval, #{comment_board_seq}, #{comment_writer}, #{comment_content}, #{comment_secret}, #{comment_secret_pwd})
+	</insert>
+	
+	<select id="getCommentLiset" resultMap="comment">
+		select * from comment_table where comment_board_seq=#{comment_board_seq} order by comment_write_time desc
+	</select>
+	
+	<delete id="commentDelete">
+		delete from comment_table where comment_seq=#{comment_seq}
+	</delete>
+	
+	<update id="commentModify">
+		update comment_table set comment_content=#{comment_content}, comment_secret=#{comment_secret}, 
+		comment_secret_pwd=#{comment_secret_pwd} where comment_seq =#{comment_seq}
+	</update>
+	
+</mapper>
